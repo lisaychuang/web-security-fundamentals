@@ -76,4 +76,21 @@ Github repo: [ESAPI4JS (Enterprise Security API for JavaScript) encoder](https:/
 ### Validate Request Origin
 - Modern browsers send an Origin header
 
+## ClickJacking
+- A UI redress attack
+- Can be used to capture keystrokes
+
+### Defence
+- Incl. `X-Frame-Options` in HTTP reponse header
+- Use `frame-ancestors` CSP directive
+
+## 3rd Party Assets
+- If files are hosted by external vendors, your security is at risk of their business being compromised
+- All businesses are managed by people! People who write your dependencies make mistakes!
+
+### Defence
+- Use LTS versions
+- Support BUG Bounties in open source projects
+- Use Subresource Integiry attributes on <script> and <link> tags
+- Ask vendors to VERSION scripts
 
