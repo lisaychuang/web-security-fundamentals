@@ -92,32 +92,30 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 // CSP
-var csp = require('helmet-csp')
+const csp = require('helmet-csp')
 
 app.use(csp({
   // Specify directives as normal.
   directives: {
-    defaultSrc: ["'self'", 'default.com'],
+    defaultSrc: ["'self'"],
     scriptSrc: ["'self'", "'unsafe-inline'"],
     styleSrc: ['style.com'],
-    fontSrc: ["'self'", 'fonts.com'],
+    fontSrc: ["'self'"],
+
+    // falls back to default source
     imgSrc: ['img.com', 'data:'],
+    // only permit iFrames with sandbox defn.
     sandbox: ['allow-forms', 'allow-scripts'],
-    reportUri: '/report-violation',
+
+    // in event of CSP violation, 
+    // use this report to find compromised user and terminate session.
+    reportUri: '/report-violation', 
     objectSrc: ["'none'"],
     upgradeInsecureRequests: true
   },
 
-  // This module will detect common mistakes in your directives and throw errors
-  // if it finds any. To disable this, enable "loose mode".
-  loose: false,
-
   // Set to true if you only want browsers to report errors, not block them.
   // You may also set this to a function(req, res) in order to decide dynamically
   // whether to use reportOnly mode, e.g., to allow for a dynamic kill switch.
-  reportOnly: false,
-
-  // Set to true if you want to blindly set all headers: Content-Security-Policy,
-  // X-WebKit-CSP, and X-Content-Security-Policy.
-  setAllHeaders: false
+  reportOnly: true
 }))
