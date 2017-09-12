@@ -2,7 +2,8 @@ const Sequelize = require('sequelize');
 const express = require('express');
 const router = express.Router();
 const collection = require('lodash/collection'); 
-
+const csurf = require('csurf');
+const csrfProtection = csrf({ cookie: true })
 const Db = require('../db').instance;
 const Account = Db.models.account;
 const User = Db.models.user;
@@ -17,7 +18,7 @@ function errorAndReload(req, res, message) {
   res.redirect('/transfers');
 }
 
-router.get('/', function(req, res/*, next*/) {
+router.get('/', csrfProtection, function(req, res/*, next*/) {
   bounceOutIfLoggedOut(req, res, () => {
     let { accountTo, accountFrom, amount } = req.query;
     Account.findAll({
@@ -30,12 +31,14 @@ router.get('/', function(req, res/*, next*/) {
       let myAccounts = allAccounts.filter((a) => a.userId === req.session.currentUser.id);
       let userAccounts = collection.groupBy(
         allAccounts.map(a => a.get({plain: true})), acc => acc.user.username);
-      res.render('transfers', { title: 'Strawbank: Transfers', myAccounts, userAccounts, accountTo, accountFrom, amount });
+      res.render('transfers', { title: 'Strawbank: Transfers', 
+      csrfToken: req.csrfToken(),
+      myAccounts, userAccounts, accountTo, accountFrom, amount });
     });
   });
 });
 
-router.all('/perform', function(req, res) {
+router.post('/perform',csrfProtection, function(req, res) {
   bounceOutIfLoggedOut(req, res, () => {
     let { accountFrom, accountTo, amount } = Object.assign(Object.assign({}, req.body), req.query);
     amount = parseFloat(amount);

@@ -48,4 +48,32 @@ Github repo: [ESAPI4JS (Enterprise Security API for JavaScript) encoder](https:/
     - Multiple directives are separated by semicolon ;
 - Generate cryptographic nonces per page load, changed unpredictably
 
+### XSS Defence
+1. Be restrictive on file upload types and ability to access those types
+2. Compress files to drop non-visible data
+3. Before allowing attatchment types, research capabilities thoroughly (esp. PDFs!)
+
+## Cross Site Request Forgery (CSRF)
+- Takes advantage of cookies/ basic Authentification credential, that are passed along requests to authenticate & authorize user
+
+### Defense
+- Use a 'Client side' cookie
+- Using cookies doesn't require the ability to READ cookies (only avail in the domain that receives the cookie)
+- localStorage / sessionStorage
+- Use a CSRF token
+- Validate request origin
+- Set your Cross-Origin Resource Sharing (CORS) option correctly. 
+    - A preflight OPTIONS request giving server a chance to indicate what's allowed
+    - Main request will follow
+
+### CSRF tokens
+- changes with each request and are generated randomly
+- Similar to 2-factor authentification:
+    1. something proving you are authenticatd
+    2. something proving you are sending a request from authorized origins
+- For server rendered apps: meta tags are fine
+
+### Validate Request Origin
+- Modern browsers send an Origin header
+
 
